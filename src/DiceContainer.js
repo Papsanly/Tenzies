@@ -1,4 +1,3 @@
-import React from "react"
 import Die from "./Die";
 
 export default function DiceContainer({dice, onClick}) {
