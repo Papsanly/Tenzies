@@ -1,6 +1,7 @@
 import DiceContainer from "./DiceContainer";
 import {nanoid} from "nanoid";
 import React from "react";
+import ReactConfetti from "react-confetti";
 
 export default function App() {
 
@@ -60,6 +61,7 @@ export default function App() {
 
     return (
         <div>
+            {isGameWon && <ReactConfetti/>}
             <header className={headerStyle}>You Win!</header>
             <main>
                 <h1 className="title">Tenzies</h1>
