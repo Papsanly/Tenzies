@@ -1,0 +1,15 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  display: flex;
+  height: 100vh;
+  background: #0B2434;
+  align-items: center;
+  justify-content: center;
+  font-family: Nunito, sans-serif;
+  color: #2B283A;
+}

@@ -1,0 +1,22 @@
+.roll-button {
+  font: inherit;
+  font-size: 1.5rem;
+  font-weight: 700;
+  border: none;
+  background: #5035ff;
+  color: white;
+  border-radius: 5px;
+  margin: 20px;
+  padding: 0.5rem 1.5rem;
+  box-shadow: 0 3px 4px #0004;
+  transition: translate .2s, box-shadow .2s;
+}
+
+.roll-button:hover {
+  translate: 0 -1px;
+}
+
+.roll-button:active {
+  translate: 0 2px;
+  box-shadow: 0 1px 1px #0002;
+}

@@ -5,10 +5,10 @@ import ReactConfetti from "react-confetti";
 
 export default function App() {
 
-    function RollDice() {
+    function EmptyDice() {
         return Array.from({length: 10}, () => {
             return {
-                value: Math.ceil(Math.random() * 6),
+                value: 0,
                 isHeld: false,
                 id: nanoid()
             }
@@ -24,8 +24,11 @@ export default function App() {
         })
     }
 
-    const [dice, setDice] = React.useState(RollDice())
+    const [dice, setDice] = React.useState(EmptyDice())
     const [isGameWon, setIsGameWon] = React.useState(false)
+    const [isGameStarted, setIsGameStarted] = React.useState(false)
+    const [rollsCount, setRollsCount] = React.useState(0)
+    const [time, setTime] = React.useState(0)
 
     React.useEffect(() => {
         if (
@@ -37,8 +40,22 @@ export default function App() {
         }
     }, [dice])
 
+    React.useEffect(() => {
+        let interval
+        if (!isGameWon && isGameStarted)
+            interval = setInterval(() => setTime(time =>
+                Math.round(time + 1)), 100
+            )
+        if (!isGameStarted)
+            setDice(EmptyDice())
+        return () => {
+            if (!isGameWon)
+                clearInterval(interval)
+        }
+    }, [isGameWon, isGameStarted])
+
     function handleDiceClick(event) {
-        if (!isGameWon)
+        if (!isGameWon && isGameStarted)
             setDice(dice => {
                 return dice.map(die => {
                     if (die.id === event.target.id)
@@ -49,20 +66,39 @@ export default function App() {
     }
 
     function handleRollButtonClick() {
-        if (isGameWon) {
-            setDice(RollDice())
-            setIsGameWon(false)
+        if (!isGameStarted) {
+            setIsGameStarted(true)
         }
-        else
+        if (isGameWon) {
+            setIsGameWon(false)
+            setTime(0)
+            setRollsCount(0)
+            setIsGameStarted(false)
+        }
+        else {
             setDice(dice => ReRollDice(dice))
+            setRollsCount(rollsCount => rollsCount + 1)
+        }
     }
 
     const headerStyle = isGameWon ? "you-win-title" : "you-win-title transparent"
+    const timeDisplay = `${Math.round(time / 10)}.${time % 10}s`
+    let rollButtonText;
+    if (isGameWon)
+        rollButtonText = "Reset"
+    else if (!isGameStarted)
+        rollButtonText = "Start"
+    else
+        rollButtonText = "Roll"
 
     return (
         <div>
             {isGameWon && <ReactConfetti/>}
             <header className={headerStyle}>You Win!</header>
+            <div className="stats-container">
+                <h2 className="stats">Rolls: {rollsCount}</h2>
+                <h2 className="stats">Time: {timeDisplay}</h2>
+            </div>
             <main>
                 <h1 className="title">Tenzies</h1>
                 <p className="text">
@@ -78,7 +114,7 @@ export default function App() {
                     className="roll-button"
                     onClick={handleRollButtonClick}
                 >
-                    {isGameWon ? "Reset dice" : "Roll"}
+                    {rollButtonText}
                 </button>
             </main>
         </div>
